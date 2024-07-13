@@ -1,0 +1,19 @@
+# Convert audio to AAC3
+ffmpeg -i avengers-infinity-war.mp4 -c:v copy -c:a ac3 -b:a 320k avengers-infinity-war.mp4
+
+# Embed subtitles
+ffmpeg -i avengers-infinity-war.mkv \
+    -f srt \
+    -i avengers-infinity-war.srt \
+    -c:v copy -c:a copy -c:s srt \
+    avengers-infinity-war.mkv
+
+# Convert audio and embed subtitles
+ffmpeg -i avengers-infinity-war.mp4 \
+    -f srt \
+    -i avengers-infinity-war.srt \
+    -c:v copy -c:a ac3 -b:a 320k -c:s srt \
+    avengers-infinity-war.mkv
+
+# Gather info
+ffprobe avengers-infinity-war.mkv
