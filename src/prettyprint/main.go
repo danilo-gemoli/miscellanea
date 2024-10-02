@@ -15,7 +15,7 @@ func prettyPrint(o interface{}, indentLvl int) ([]string, error) {
 	writeLine := func(data string) { out = append(out, data) }
 	switch o.(type) {
 	case nil:
-		return []string{"interface{}"}, nil
+		return []string{"nil"}, nil
 	case bool:
 		bb := o.(bool)
 		return []string{fmt.Sprintf("%t", bb)}, nil
