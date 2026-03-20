@@ -1,0 +1,19 @@
+{
+  "src_root": "/home/prow/go",
+  "log": "/logs/clone.json",
+  "git_user_name": "ci-robot",
+  "git_user_email": "ci-robot@k8s.io",
+  "refs": [
+    {
+      "org": "openshift",
+      "repo": "ci-tools",
+      "repo_link": "https://github.com/openshift/ci-tools",
+      "base_ref": "main",
+      "base_sha": "d7866ae39b419b8831f472aa827ffae5ccfa5a97",
+      "base_link": "https://github.com/openshift/ci-tools/commit/d7866ae39b419b8831f472aa827ffae5ccfa5a97"
+    }
+  ],
+  "github_api_endpoints": [
+    "https://api.github.com"
+  ]
+}

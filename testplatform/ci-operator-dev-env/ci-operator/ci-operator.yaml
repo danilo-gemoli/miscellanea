@@ -1,0 +1,103 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    ci-workload: prowjobs
+    ci-workload-namespace: ci
+  name: ci-operator-run
+  namespace: ci
+spec:
+  containers:
+  - command:
+    - ci-operator
+    args:
+      - --namespace=dgemoli-ci-operator-debug
+      - --delete-when-idle=0
+      - --delete-after=0
+      - --lease-server=http://boskos.dgemoli-ci-operator-debug.svc.cluster.local
+      - --resolver-address=http://ci-operator-configresolver.dgemoli-ci-operator-debug.svc.cluster.local
+      - --config=/home/dgemoli/dev/src/github.com/danilo-gemoli/miscellanea/testplatform/ci-operator/config.yaml
+      - --target=fake-e2e
+      - --print-graph
+    env:
+    - name: ARTIFACTS
+      value: /logs/artifacts
+    - name: BUILD_ID
+      value: "2020872698451726336"
+    - name: BUILD_NUMBER
+      value: "2020872698451726336"
+    - name: CI
+      value: "true"
+    - name: GOPATH
+      value: /home/prow/go
+    - name: JOB_NAME
+      value: pull-ci-stackrox-stackrox-master-ocp-4-12-qa-e2e-tests
+    - name: JOB_SPEC
+      value: '{"type":"presubmit","job":"pull-ci-stackrox-stackrox-master-ocp-4-12-qa-e2e-tests","buildid":"2020872698451726336","prowjobid":"f61d1f88-4388-4de0-9c66-3e63be66918d","refs":{"org":"stackrox","repo":"stackrox","repo_link":"https://github.com/stackrox/stackrox","base_ref":"master","base_sha":"336c1f1700364a7932e3eb4c0ab8542ce8f4f3ad","base_link":"https://github.com/stackrox/stackrox/commit/336c1f1700364a7932e3eb4c0ab8542ce8f4f3ad","pulls":[{"number":18513,"author":"mclasmeier","sha":"11efe25a758393cffd7e2882f8df77e269d2a4ee","title":"ROX-26769:
+        CRS max-registrations feature","head_ref":"mc/crs-max-registrations-tidy","link":"https://github.com/stackrox/stackrox/pull/18513","commit_link":"https://github.com/stackrox/stackrox/pull/18513/commits/11efe25a758393cffd7e2882f8df77e269d2a4ee","author_link":"https://github.com/mclasmeier"}]},"decoration_config":{"timeout":"8h0m0s","grace_period":"1h0m0s","utility_images":{"clonerefs":"us-docker.pkg.dev/k8s-infra-prow/images/clonerefs:v20260128-95b2a3412","initupload":"us-docker.pkg.dev/k8s-infra-prow/images/initupload:v20260128-95b2a3412","entrypoint":"us-docker.pkg.dev/k8s-infra-prow/images/entrypoint:v20260128-95b2a3412","sidecar":"us-docker.pkg.dev/k8s-infra-prow/images/sidecar:v20260128-95b2a3412"},"resources":{"clonerefs":{"limits":{"memory":"3Gi"},"requests":{"cpu":"100m","memory":"500Mi"}},"initupload":{"limits":{"memory":"200Mi"},"requests":{"cpu":"100m","memory":"50Mi"}},"place_entrypoint":{"limits":{"memory":"100Mi"},"requests":{"cpu":"100m","memory":"25Mi"}},"sidecar":{"limits":{"memory":"2Gi"},"requests":{"cpu":"100m","memory":"250Mi"}}},"gcs_configuration":{"bucket":"test-platform-results","path_strategy":"single","default_org":"openshift","default_repo":"origin","mediaTypes":{"log":"text/plain"},"compress_file_types":["txt","log","json","tar","html","yaml"]},"gcs_credentials_secret":"gce-sa-credentials-gcs-publisher","skip_cloning":true,"censor_secrets":true,"censoring_options":{"minimum_secret_length":6}}}'
+    - name: JOB_TYPE
+      value: presubmit
+    - name: PROW_JOB_ID
+      value: f61d1f88-4388-4de0-9c66-3e63be66918d
+    - name: PULL_BASE_REF
+      value: master
+    - name: PULL_BASE_SHA
+      value: 336c1f1700364a7932e3eb4c0ab8542ce8f4f3ad
+    - name: PULL_HEAD_REF
+      value: mc/crs-max-registrations-tidy
+    - name: PULL_NUMBER
+      value: "18513"
+    - name: PULL_PULL_SHA
+      value: 11efe25a758393cffd7e2882f8df77e269d2a4ee
+    - name: PULL_REFS
+      value: master:336c1f1700364a7932e3eb4c0ab8542ce8f4f3ad,18513:11efe25a758393cffd7e2882f8df77e269d2a4ee
+    - name: PULL_TITLE
+      value: 'ROX-26769: CRS max-registrations feature'
+    - name: REPO_NAME
+      value: stackrox
+    - name: REPO_OWNER
+      value: stackrox
+    - name: ENTRYPOINT_OPTIONS
+      value: '{"timeout":28800000000000,"grace_period":3600000000000,"artifact_dir":"/logs/artifacts","args":["ci-operator","--gcs-upload-secret=/secrets/gcs/service-account.json","--image-import-pull-secret=/etc/pull-secret/.dockerconfigjson","--report-credentials-file=/etc/report/credentials","--target=qa-e2e-tests","--variant=ocp-4-12"],"container_name":"test","process_log":"/logs/process-log.txt","marker_file":"/logs/marker-file.txt","metadata_file":"/logs/artifacts/metadata.json"}'
+    image: quay-proxy.ci.openshift.org/openshift/ci:ci_ci-operator_latest
+    imagePullPolicy: Always
+    name: test
+    resources:
+      requests:
+        cpu: 10m
+    volumeMounts:
+    - mountPath: /secrets/manifest-tool
+      name: manifest-tool-local-pusher
+      readOnly: true
+    - mountPath: /etc/pull-secret
+      name: pull-secret
+      readOnly: true
+    - mountPath: /logs
+      name: logs
+    - mountPath: /tools
+      name: tools
+  imagePullSecrets:
+  - name: ci-operator-dockercfg-fsrv8
+  nodeSelector:
+    ci-workload: prowjobs
+  serviceAccount: ci-operator
+  serviceAccountName: ci-operator
+  volumes:
+  - name: manifest-tool-local-pusher
+    secret:
+      defaultMode: 420
+      secretName: manifest-tool-local-pusher
+  - name: pull-secret
+    secret:
+      defaultMode: 420
+      secretName: registry-pull-credentials
+  - name: result-aggregator
+    secret:
+      defaultMode: 420
+      secretName: result-aggregator
+  - emptyDir: {}
+    name: logs
+  - emptyDir: {}
+    name: tools
+

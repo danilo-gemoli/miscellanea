@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "configurations": 
+    [
+        {
+            "name": "ci-operator",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "cmd/ci-operator",
+            "args": [
+                "--namespace=dgemoli-ci-operator-debug"
+                , "--delete-when-idle=0"
+                , "--delete-after=0"
+                // , "--lease-server=http://boskos.dgemoli-ci-operator-debug.svc.cluster.local"
+                // , "--resolver-address=http://ci-operator-configresolver.dgemoli-ci-operator-debug.svc.cluster.local"
+                , "--lease-server=http://localhost:8080"
+                , "--lease-server-credentials-file=/tmp/ci-operator/secrets/boskos/credentials"
+                , "--resolver-address=http://localhost:8081"
+                , "--image-import-pull-secret=/tmp/ci-operator/secrets/pull-secret/.dockerconfigjson"
+                , "--local-registry-dns=registry.build01.ci.openshift.org"
+                , "--secret-dir=/tmp/ci-operator/secrets/ci-pull-credentials/"
+                , "--config=/home/dgemoli/dev/src/github.com/danilo-gemoli/miscellanea/testplatform/ci-operator/config.yaml"
+                , "--manifest-tool-dockercfg=/tmp/ci-operator/secrets/manifest-tool-local-pusher/.dockerconfigjson"
+                , "--target=fake-e2e"
+                // , "--print-graph"
+            ],
+            "env": {
+                // "CONFIG_SPEC": "/home/dgemoli/dev/src/github.com/danilo-gemoli/miscellanea/testplatform/ci-operator/config.yaml" ,
+                "JOB_SPEC": "{\"type\":\"postsubmit\",\"job\":\"ci-op-degemoli-test\",\"buildid\":\"48576388463417581771\",\"prowjobid\":\"bfd5c825-91c3-4ff4-a9b6-37e1646fa5b3\",\"refs\":{\"org\":\"openshift\",\"repo\":\"ci-tools\",\"repo_link\":\"https://github.com/openshift/ci-tools\",\"base_ref\":\"master\",\"base_sha\":\"fbbc82d4328b3b759037ce8e31ad092084b8e585\",\"base_link\":\"https://github.com/openshift/ci-tools/commit/fbbc82d4328b3b759037ce8e31ad092084b8e585\",\"pulls\":[{\"number\":1,\"author\":\"fake\",\"sha\":\"fbbc82d4328b3b759037ce8e31ad092084b8e585\"}]},\"decoration_config\":{\"timeout\":\"4h0m0s\",\"grace_period\":\"1h0m0s\",\"utility_images\":{\"clonerefs\":\"us-docker.pkg.dev/k8s-infra-prow/images/clonerefs:v20241224-8e8a5cfe7\",\"initupload\":\"us-docker.pkg.dev/k8s-infra-prow/images/initupload:v20241224-8e8a5cfe7\",\"entrypoint\":\"us-docker.pkg.dev/k8s-infra-prow/images/entrypoint:v20241224-8e8a5cfe7\",\"sidecar\":\"us-docker.pkg.dev/k8s-infra-prow/images/sidecar:v20241224-8e8a5cfe7\"},\"resources\":{\"clonerefs\":{\"limits\":{\"memory\":\"3Gi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"500Mi\"}},\"initupload\":{\"limits\":{\"memory\":\"200Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"50Mi\"}},\"place_entrypoint\":{\"limits\":{\"memory\":\"100Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"25Mi\"}},\"sidecar\":{\"limits\":{\"memory\":\"2Gi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"250Mi\"}}},\"gcs_configuration\":{\"bucket\":\"origin-ci-test\",\"path_strategy\":\"single\",\"default_org\":\"openshift\",\"default_repo\":\"origin\",\"mediaTypes\":{\"log\":\"text/plain\"}},\"gcs_credentials_secret\":\"gce-sa-credentials-gcs-publisher\",\"censor_secrets\":true}}" ,
+                "KUBECONFIG": "/tmp/ci-operator/kubeconfig.yaml"
+            }
+        },
+        {
+            "name": "ci-operator-remote",
+            "type": "go",
+            "request": "attach",
+            "mode": "remote",
+            "host": "127.0.0.1",
+            "port": 5555,
+            "program": "${workspaceFolder}",
+            "remotePath": "/home/dgemoli/dev/src/github.com/danilo-gemoli/ci-tools",
+            "debugAdapter": "dlv-dap"
+        }
+    ]
+}

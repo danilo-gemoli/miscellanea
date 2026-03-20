@@ -1,0 +1,76 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  annotations:
+    serviceaccounts.openshift.io/oauth-redirectreference.alertmanager: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"boskos"}}'
+  name: boskos
+  namespace: dgemoli-ci-operator-debug
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: boskos
+  namespace: dgemoli-ci-operator-debug
+rules:
+- apiGroups: ["boskos.k8s.io"]
+  verbs: ["*"]
+  resources: ["*"]
+- apiGroups:
+  - ""
+  resourceNames:
+  - boskos-cleaner-leaderlock
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - events
+  verbs:
+  - create
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  resourceNames:
+  - boskos-server
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+- apiGroups: ["boskos.k8s.io"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: boskos
+  namespace: dgemoli-ci-operator-debug
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: boskos
+subjects:
+- kind: ServiceAccount
+  name: boskos
+

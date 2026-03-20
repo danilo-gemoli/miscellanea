@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ci-operator-configresolver
+  namespace: dgemoli-ci-operator-debug
+# ---
+# kind: Role
+# apiVersion: rbac.authorization.k8s.io/v1
+# metadata:
+#   name: ci-operator-configresolver
+#   namespace: ocp-private
+# rules:
+#   - apiGroups:
+#       - image.openshift.io
+#     resources:
+#       - imagestreams
+#     verbs:
+#       - get
+# ---
+# kind: RoleBinding
+# apiVersion: rbac.authorization.k8s.io/v1
+# metadata:
+#   name: ci-operator-configresolver
+#   namespace: ocp-private
+# roleRef:
+#   apiGroup: rbac.authorization.k8s.io
+#   kind: Role
+#   name: ci-operator-configresolver
+# subjects:
+# - kind: ServiceAccount
+#   name: ci-operator-configresolver
+#   namespace: dgemoli-ci-operator-debug
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dgemoli-ci-operator-debug
+  labels:
+    app: prow
+    component: ci-operator-configresolver
+  name: ci-operator-configresolver
+spec:
+  ports:
+  - name: main
+    port: 80
+    protocol: TCP
+    targetPort: main
+  - name: ui
+    port: 8082
+    protocol: TCP
+    targetPort: ui
+  - name: metrics
+    port: 9090
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    app: prow
+    component: ci-operator-configresolver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dgemoli-ci-operator-debug
+  name: ci-operator-configresolver
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: prow
+      component: ci-operator-configresolver
+  template:
+    metadata:
+      labels:
+        app: prow
+        component: ci-operator-configresolver
+    spec:
+      initContainers:
+      - name: git-sync-init
+        command:
+        - /git-sync
+        args:
+        - --repo=https://github.com/openshift/release.git
+        - --ref=main
+        - --root=/tmp/git-sync
+        - --one-time=true
+        - --depth=1
+        - --link=release
+        image: quay-proxy.ci.openshift.org/openshift/ci:ci_git-sync_v4.3.0
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: release
+          mountPath: /tmp/git-sync
+      containers:
+      - name: ci-operator-configresolver
+        image: registry.build01.ci.openshift.org/dgemoli-ci-operator-debug/ci-operator-configresolver:latest
+        imagePullPolicy: Always
+        args:
+        - -release-repo-git-sync-path=/var/repo/release
+        - -log-level=debug
+        ports:
+        - name: main
+          containerPort: 8080
+        - name: ui
+          containerPort: 8082
+        - name: metrics
+          containerPort: 9090
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 3
+          timeoutSeconds: 600
+        volumeMounts:
+        - name: release
+          mountPath: /var/repo
+          readOnly: true
+        # resources:
+        #   requests:
+        #     memory: "2Gi"
+        #     cpu: "200m"
+      serviceAccountName: ci-operator-configresolver
+      volumes:
+      - name: release
+        emptyDir: {}
+

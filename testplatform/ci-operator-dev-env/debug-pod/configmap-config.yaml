@@ -1,0 +1,41 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: ci
+  name: ci-operator-dgemoli-test
+data:
+  config.yaml: |
+    build_root:
+      image_stream_tag:
+        namespace: ci
+        name: ci-tools-build-root
+        tag: "1.23"
+    releases:
+      latest:
+        integration:
+          name: "4.22"
+          namespace: ocp
+    resources:
+      '*':
+        requests:
+          cpu: 100m
+          memory: 200Mi
+    tests:
+    - as: fake-e2e
+      literal_steps:
+        cluster_profile: openshift-org-aws
+        test:
+        - as: test
+          commands: |
+            env
+            sleep infinity
+          from: src
+          resources:
+            requests:
+              cpu: 100m
+    zz_generated_metadata:
+      branch: main
+      org: openshift
+      repo: ci-tools
+

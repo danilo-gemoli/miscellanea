@@ -1,0 +1,173 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dgemoli-ci-operator-debug
+  namespace: ci
+spec:
+  containers:
+  - command:
+    # - ci-operator
+    - /bin/sh
+    args:
+      - -c
+      - |
+        sleep infinity
+      # - --namespace=dgemoli-ci-operator-debug
+      # - --delete-when-idle=0
+      # - --delete-after=0
+      # - --gcs-upload-secret=/secrets/gcs/service-account.json
+      # - --image-import-pull-secret=/etc/pull-secret/.dockerconfigjson
+      # - --lease-server-credentials-file=/etc/boskos/credentials
+      # - --report-credentials-file=/etc/report/credentials
+      # - --secret-dir=/secrets/ci-pull-credentials
+      # - --lease-server=http://boskos.dgemoli-ci-operator-debug.svc.cluster.local
+      # - --resolver-address=http://ci-operator-configresolver.dgemoli-ci-operator-debug.svc.cluster.local
+      # - --config=/tmp/ci-operator-config/config.yaml
+      # - --target=fake-e2e
+    env:
+    - name: HTTP_SERVER_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    - name: ARTIFACTS
+      value: /logs/artifacts
+    - name: BUILD_ID
+      value: "2021518107423543296"
+    - name: BUILD_NUMBER
+      value: "2021518107423543296"
+    - name: CI
+      value: "true"
+    - name: GOPATH
+      value: /home/prow/go
+    - name: JOB_NAME
+      value: fake-job-name
+    - name: JOB_SPEC
+      value: '{"type":"presubmit","job":"fake-job-name","buildid":"2021518107423543296","prowjobid":"d08a2811-1d80-4299-8aaa-c29699178bc6","refs":{"org":"openshift","repo":"ci-tools","repo_link":"https://github.com/openshift/ci-tools","base_ref":"main","base_sha":"d7866ae39b419b8831f472aa827ffae5ccfa5a97","base_link":"https://github.com/openshift/ci-tools/commit/d7866ae39b419b8831f472aa827ffae5ccfa5a97","pulls":[{"number":1,"author":"fake","sha":"d49a0765aeda3038eaca3f3c496a8d0f8ed00f1b","title":"fake-tile","head_ref":"fake-head-ref","link":"https://github.com/openshift/ci-tools/pull/1","commit_link":"https://github.com/openshift/ci-tools/pull/1/commits/d49a0765aeda3038eaca3f3c496a8d0f8ed00f1b","author_link":"fake-author"}]},"decoration_config":{"timeout":"8h0m0s","grace_period":"1h0m0s","utility_images":{"clonerefs":"us-docker.pkg.dev/k8s-infra-prow/images/clonerefs:v20260128-95b2a3412","initupload":"us-docker.pkg.dev/k8s-infra-prow/images/initupload:v20260128-95b2a3412","entrypoint":"us-docker.pkg.dev/k8s-infra-prow/images/entrypoint:v20260128-95b2a3412","sidecar":"us-docker.pkg.dev/k8s-infra-prow/images/sidecar:v20260128-95b2a3412"},"resources":{"clonerefs":{"limits":{"memory":"3Gi"},"requests":{"cpu":"100m","memory":"500Mi"}},"initupload":{"limits":{"memory":"200Mi"},"requests":{"cpu":"100m","memory":"50Mi"}},"place_entrypoint":{"limits":{"memory":"100Mi"},"requests":{"cpu":"100m","memory":"25Mi"}},"sidecar":{"limits":{"memory":"2Gi"},"requests":{"cpu":"100m","memory":"250Mi"}}},"gcs_configuration":{"bucket":"test-platform-results","path_strategy":"single","default_org":"openshift","default_repo":"origin","mediaTypes":{"log":"text/plain"},"compress_file_types":["txt","log","json","tar","html","yaml"]},"gcs_credentials_secret":"gce-sa-credentials-gcs-publisher","censor_secrets":true,"censoring_options":{"minimum_secret_length":6}}}'
+    - name: JOB_TYPE
+      value: presubmit
+    - name: PROW_JOB_ID
+      value: d08a2811-1d80-4299-8aaa-c29699178bc6
+    - name: REPO_NAME
+      value: ci-tools
+    - name: REPO_OWNER
+      value: openshift
+    - name: PULL_BASE_REF
+      value: main
+    - name: PULL_BASE_SHA
+      value: d69231a46e0314237bccf678cf9ad6fcf29840ad
+    - name: PULL_HEAD_REF
+      value: SREP-3493
+    - name: PULL_NUMBER
+      value: "577"
+    - name: PULL_PULL_SHA
+      value: d49a0765aeda3038eaca3f3c496a8d0f8ed00f1b
+    - name: PULL_REFS
+      value: main:d69231a46e0314237bccf678cf9ad6fcf29840ad,577:d49a0765aeda3038eaca3f3c496a8d0f8ed00f1b
+    - name: PULL_TITLE
+      value: 'Fix(SREP-3493): ROSA HCP billing for control planes'
+    image: registry.build01.ci.openshift.org/dgemoli-ci-operator-debug/ci-operator:latest
+    imagePullPolicy: Always
+    name: test
+    ports:
+      - containerPort: 5555
+      - containerPort: 8080
+    resources:
+      requests:
+        cpu: 15m
+    volumeMounts:
+    - mountPath: /etc/boskos
+      name: boskos
+      readOnly: true
+    - mountPath: /secrets/ci-pull-credentials
+      name: ci-pull-credentials
+      readOnly: true
+    - mountPath: /secrets/gcs
+      name: gcs-credentials
+      readOnly: true
+    - mountPath: /secrets/manifest-tool
+      name: manifest-tool-local-pusher
+      readOnly: true
+    - mountPath: /etc/pull-secret
+      name: pull-secret
+      readOnly: true
+    - mountPath: /etc/report
+      name: result-aggregator
+      readOnly: true
+    - mountPath: /logs
+      name: logs
+    - mountPath: /tools
+      name: tools
+    - mountPath: /home/prow/go
+      name: code
+    - mountPath: /tmp/ci-operator-config
+      name: ci-operator-config
+    workingDir: /home/prow/go/src/github.com/openshift/ci-tools
+  initContainers:
+  - env:
+    - name: CLONEREFS_OPTIONS
+      value: '{"src_root":"/home/prow/go","log":"/logs/clone.json","git_user_name":"ci-robot","git_user_email":"ci-robot@k8s.io","refs":[{"org":"openshift","repo":"ci-tools","repo_link":"https://github.com/openshift/ci-tools","base_ref":"main","base_sha":"d7866ae39b419b8831f472aa827ffae5ccfa5a97","base_link":"https://github.com/openshift/ci-tools/commit/d7866ae39b419b8831f472aa827ffae5ccfa5a97"}],"github_api_endpoints":["https://api.github.com"]}'
+    image: us-docker.pkg.dev/k8s-infra-prow/images/clonerefs:v20260128-95b2a3412
+    imagePullPolicy: IfNotPresent
+    name: clonerefs
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 100m
+        memory: 500Mi
+    volumeMounts:
+    - mountPath: /logs
+      name: logs
+    - mountPath: /home/prow/go
+      name: code
+    - mountPath: /tmp
+      name: clonerefs-tmp
+      readOnly: true
+  nodeSelector:
+    ci-workload: prowjobs
+  serviceAccount: ci-operator
+  serviceAccountName: ci-operator
+  tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/ci-prowjobs-worker
+    operator: Exists
+  volumes:
+  - name: boskos
+    secret:
+      defaultMode: 420
+      items:
+      - key: credentials
+        path: credentials
+      secretName: boskos-credentials
+  - name: ci-pull-credentials
+    secret:
+      defaultMode: 420
+      secretName: ci-pull-credentials
+  - name: manifest-tool-local-pusher
+    secret:
+      defaultMode: 420
+      secretName: manifest-tool-local-pusher
+  - name: pull-secret
+    secret:
+      defaultMode: 420
+      secretName: registry-pull-credentials
+  - name: result-aggregator
+    secret:
+      defaultMode: 420
+      secretName: result-aggregator
+  - emptyDir: {}
+    name: logs
+  - emptyDir: {}
+    name: tools
+  - name: gcs-credentials
+    secret:
+      defaultMode: 420
+      secretName: gce-sa-credentials-gcs-publisher
+  - emptyDir: {}
+    name: clonerefs-tmp
+  - emptyDir: {}
+    name: code
+  - configMap:
+      name: ci-operator-dgemoli-test
+    name: ci-operator-config
+
