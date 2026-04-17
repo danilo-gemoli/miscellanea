@@ -46,6 +46,18 @@ b01 --as system:admin -n ci cp --retries=3 -c test $(which ci-operator) dgemoli-
 --config=/tmp/ci-operator-config/config.yaml \
 --target=fake-e2e
 
+# Custom
+/tmp/ci-operator \
+--namespace=dgemoli-ci-operator-debug \
+--delete-when-idle=0 \
+--delete-after=0 \
+--gcs-upload-secret=/secrets/gcs/service-account.json \
+--image-import-pull-secret=/etc/pull-secret/.dockerconfigjson \
+--lease-server-credentials-file=/etc/boskos/credentials \
+--report-credentials-file=/etc/report/credentials \
+--secret-dir=/secrets/ci-pull-credentials \
+--config=/tmp/ci-operator-config/config.yaml \
+--target=fake-e2e
 ```
 
 dlv run cmd:

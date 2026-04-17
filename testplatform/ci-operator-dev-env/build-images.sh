@@ -8,7 +8,7 @@ if [ "$images" == "all" ]; then
 fi
 
 # Build and push an image that holds the tool passed as an argument.
-function build_image() {
+function build_and_push() {
     tool="$1"
     pushd "${HOME}/dev/src/github.com/danilo-gemoli/ci-tools/" &>/dev/null
     go install ./cmd/${tool}/...
@@ -25,7 +25,7 @@ b01 registry login
 b01 --as system:admin apply -f "$images_rbac"
 
 for image in $images; do
-    build_image $image
+    build_and_push $image
 done
 
 b01 --as system:admin delete -f "$images_rbac"

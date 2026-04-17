@@ -6,6 +6,11 @@ metadata:
   name: ci-operator-dgemoli-test
 data:
   config.yaml: |
+    base_images:
+      installer:
+        name: "4.22"
+        namespace: ocp
+        tag: installer
     build_root:
       image_stream_tag:
         namespace: ci
@@ -24,13 +29,13 @@ data:
     tests:
     - as: fake-e2e
       literal_steps:
-        cluster_profile: openshift-org-aws
+        cluster_profile: openshift-org-azure
         test:
         - as: test
           commands: |
             env
             sleep infinity
-          from: src
+          from: installer
           resources:
             requests:
               cpu: 100m
