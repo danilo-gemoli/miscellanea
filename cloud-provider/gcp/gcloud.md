@@ -3,8 +3,11 @@
 ## Set Credentials and Project
 ```sh
 export GOOGLE_APPLICATION_CREDENTIALS=gce.json
+gcloud config set account $(jq -r .client_email gce.json)
 gcloud config set project $(jq -r .project_id gce.json)
 
+# Check the account
+gcloud auth list
 # Check the project
 gcloud config get-value project
 ```
@@ -29,7 +32,6 @@ gcloud beta quotas info list --service=compute.googleapis.com --project=openshif
   "quotaId": "T2A-CPUS-per-project-zone",
   "limit": "-1"
 }
-
 ```
 
 ## Machines
@@ -50,9 +52,15 @@ gcloud compute machine-types describe t2a-standard-4 --zone=us-central1-a
 ## Logs
 ```sh
 gcloud logging read 'protoPayload.status.message=~"quota|capacity|unavailable|ZONE_RESOURCE_POOL_EXHAUSTED"
-    AND protoPayload.authenticationInfo.principalEmail=~"ci-op-2m7xl4n3"
+    AND protoPayload.authenticationInfo.principalEmail=~"ci-op-dq697yj9"
     AND resource.labels.zone="us-central1-a"
-    AND timestamp>="2026-04-16T00:00:00Z"
-    AND timestamp<"2026-04-17T00:00:00Z"' \
+    AND timestamp>="2026-04-25T00:00:00Z"
+    AND timestamp<"2026-04-26T00:00:00Z"' \
   --format=json --limit=1000
+
+gcloud logging read 'protoPayload.status.message=~"quota|capacity|unavailable|ZONE_RESOURCE_POOL_EXHAUSTED"
+  AND resource.labels.zone="us-central1-a"
+  AND timestamp>="2026-04-25T00:00:00Z"
+  AND timestamp<"2026-04-26T00:00:00Z"' \
+  --format=json --limit=1000 | tee log.json
 ```
