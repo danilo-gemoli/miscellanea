@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name="Apply .Xresources file"
+X-GNOME-Autostart-enabled=true
+Exec=/bin/sh -c "xrdb -merge /home/dgemoli/.Xresources"

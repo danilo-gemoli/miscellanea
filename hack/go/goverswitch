@@ -1,0 +1,41 @@
+#!/bin/bash
+
+source "$HOME/dev/hack/shutils.sh"
+source "$HOME/dev/hack/goutils.sh"
+
+function usage() {
+    echo "Switch Go versions"
+    echo
+    echo "Usage: goverswitch \$GO_VERSION "
+    echo "Install and use a Golang version:"
+    echo "1. Choose a version"
+    echo "  \$ goverslist -u"
+    echo "  ..."
+    echo "  1.22.2"
+    echo "  1.22.3"
+    echo "2. Install it"
+    echo "  \$ gosetup 1.22.3"
+    echo "3. Use it"
+    echo "  \$ eval \$(goverswitch go1.22.3)"
+    echo "4. Verify"
+    echo "  \$ go version"
+    echo "  go version go1.22.3 linux/amd64"
+    echo -e "\nChoose and use a Golang version:"
+    echo "1. Choose a version"
+    echo "  \$ goverslist -i"
+    echo "  ..."
+    echo "  go1.22.0"
+    echo "  go1.22.3"
+    echo "2. Use it"
+    echo "  \$ eval \$(goverswitch go1.22.3)"
+    echo "3. Verify"
+    echo "  \$ go version"
+    echo "  go version go1.22.3 linux/amd64"
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+gover_switcher $1 'env'

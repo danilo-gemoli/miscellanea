@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <script id="dpal" src="https://www.redhat.com/ma/dpal.js" type="text/javascript"></script>
+<SCRIPT> if (typeof history.replaceState === 'function') {  history.replaceState({}, "some title", "https://auth.redhat.com/auth/realms/EmployeeIDP/login-actions/authenticate?execution=2221b213-ef8d-4738-a9a0-72a5eef7ab4b&client_id=rover-apps-oidc&tab_id=eWHyrKe8fMc"); }</SCRIPT></head>
+<body>
+<section>
+    <div>
+        <center><h1>You have successfully logged into Red Hat Internal SSO</h1></center>
+            <center><p>You have been redirected to rover.redhat.com, please wait.</p><center>
+            <center><p><a id="finishLoginLink" href="https://auth.redhat.com/auth/realms/EmployeeIDP/login-actions/authenticate?session_code=np8Kbg3kVIjDJTc5U8HKNa3zvkUX75gxW-mrDk5EcPA&amp;execution=2221b213-ef8d-4738-a9a0-72a5eef7ab4b&amp;client_id=rover-apps-oidc&amp;tab_id=eWHyrKe8fMc">Click here to redirect to application if not automatically redirected</a></p><center>
+    </div>
+</section>
+    <script type="text/javascript">
+        if (("undefined" !== typeof _satellite) && ("function" === typeof _satellite.pageBottom)) {
+            _satellite.pageBottom();
+        }
+    </script>
+    <script type="text/javascript">
+        window.setTimeout(function() {
+            location.href = document.getElementById("finishLoginLink").href;
+        }, "2000");
+    </script>
+</body>
+</html>

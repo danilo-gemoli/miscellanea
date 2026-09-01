@@ -1,0 +1,4 @@
+#!/bin/bash
+
+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+COOKIES="$HOME/.kube/cookies.txt" "$script_dir/../hack/login.sh" -k "$HOME/.kube/testplatform"

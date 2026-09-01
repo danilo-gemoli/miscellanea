@@ -1,0 +1,26 @@
+#!/bin/bash
+
+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+first=1
+list=""
+user="${CLUSTER_USER:-dgemoli}"
+
+appci -n ci get secret/config-updater -ojson \
+    | jq -r '.data[]' \
+	| xargs -I{} sh -c "echo -n {} | base64 -d \
+	| yq '(.clusters[0].cluster.server) + \"|\" + (.contexts[0].name) + \"|\" + (.contexts[0].context.namespace)'" \
+    >"$script_dir/records"
+
+while read record; do
+	IFS='|'; read -ra split <<<$record
+	if [ $first -eq 1 ]; then
+        first=0
+        list="$(printf '%s,%s,%s,%s' $user ${split[0]} ${split[1]} ${split[2]})"
+    else
+        list="$(printf '%s\n%s,%s,%s,%s' $list $user ${split[0]} ${split[1]} ${split[2]})"
+    fi
+done <"$script_dir/records"
+
+rm "$script_dir/records"
+printf "%s" "$list" >"$script_dir/cluster-list"

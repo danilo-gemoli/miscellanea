@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function usage() {
+    echo "Install Go"
+    echo "Usage: gosetup \$GOLANG_VERSION"
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+go install "golang.org/dl/go$1@latest"
+"go$1" download

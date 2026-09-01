@@ -1,0 +1,17 @@
+dgemoli,https://api.ci.l2s4.p1.openshiftapps.com:6443,app.ci,ci
+dgemoli,https://api.build01.ci.devcluster.openshift.com:6443,build01,ci
+dgemoli,https://api.build02.gcp.ci.openshift.org:6443,build02,ci
+dgemoli,https://api.build03.ci.devcluster.openshift.com:6443,build03,ci
+dgemoli,https://api.build04.gcp.ci.openshift.org:6443,build04,ci
+dgemoli,https://api.build05.ci.devcluster.openshift.com:6443,build05,ci
+dgemoli,https://api.build06.ci.devcluster.openshift.com:6443,build06,ci
+dgemoli,https://api.build07.ci.devcluster.openshift.com:6443,build07,ci
+dgemoli,https://api.build08.gcp.ci.openshift.org:6443,build08,ci
+dgemoli,https://api.build09.ci.devcluster.openshift.com:6443,build09,ci
+dgemoli,https://api.build10.ci.devcluster.openshift.com:6443,build10,ci
+dgemoli,https://api.build11.ci.devcluster.openshift.com:6443,build11,ci
+dgemoli,https://api.build12.ci.devcluster.openshift.com:6443,build12,ci
+dgemoli,https://api.build13.gcp.ci.openshift.org:6443,build13,ci
+dgemoli,https://api.master.ci.devcluster.openshift.com:6443,core-ci,ci
+dgemoli,https://api.hosted-mgmt.ci.devcluster.openshift.com:6443,hosted-mgmt,ci
+dgemoli,https://api.build02.vmc.ci.openshift.org:6443,vsphere02,ci

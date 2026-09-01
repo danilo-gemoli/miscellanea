@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+function download_go() {
+    version="$1"
+    platform="linux"
+    arch="amd64"
+    name=$(printf 'go%s.%s-%s.tar.gz' "$version" "$platform" "$arch")
+    curl -OL "https://go.dev/dl/$name" --output-dir "/tmp"
+    printf "/tmp/$name"
+}
+
+function mk_folders() {
+    version="$1"
+    mkdir -p "$HOME/sdk/go$version"
+}
+
+function install() {
+    go_sdk=$(download_go "$version")
+    mk_folders "$version"
+    tar xzvf "$go_sdk" --strip-components 1 -C "$HOME/sdk/go$version"
+}
+
+function usage() {
+    echo "Install Go manually"
+    echo "Usage: gobootstrap \$GOLANG_VERSION"
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+version="$1"
+install "$version"

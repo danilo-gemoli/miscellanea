@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function usage() {
+    echo "List Go versions"
+    echo
+    echo "Options:"
+    echo "-i    List installed versions"
+    echo "-u    List available upstream versions (requires 'https://github.com/travis-ci/gimme')"
+}
+
+while getopts ":iu" o; do
+    case "$o" in
+        i)
+            ls -1 "$HOME/sdk"
+            exit 0
+            ;;
+        u)
+            "$repo_travisci_gimme/gimme" -k
+            exit 0
+            ;;
+        *)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+usage

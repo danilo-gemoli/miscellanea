@@ -1,0 +1,9 @@
+[Unit]
+Description=Apply ~/.Xresources when lid is opened or closed
+
+[Service]
+Type=simple
+ExecStart=/home/dgemoli/dev/hack/xresources/xresources-apply.sh
+
+[Install]
+WantedBy=graphical.target

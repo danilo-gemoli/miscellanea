@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function usage() {
+    echo "Remove Go version"
+    echo "Usage:"
+    echo '$ goverslist -i'
+    echo "go1.18.1"
+    echo "go1.18.10"
+    echo "go1.20.9"
+    echo "$ goremove 'go1.18.1'"
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+sdk_dir="$HOME/sdk/$1"
+if [ -d "$sdk_dir" ]; then
+    rm -rf "$sdk_dir"
+    echo "$sdk_dir removed"
+else
+    echo "$sdk_dir not found"
+    exit 1
+fi
