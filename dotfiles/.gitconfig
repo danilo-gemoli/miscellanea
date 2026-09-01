@@ -1,0 +1,73 @@
+[user]
+	name = Danilo Gemoli
+	email = dgemoli@redhat.com
+	signingkey = 469E318F55851257
+[diff]
+    guitool = bc
+	tool = meld
+    colorMoved = plain
+    algorithm = histogram
+    renames = true
+    mnemonicPrefix = true
+[cola]
+	spellcheck = false
+[credential]
+	username = danilo-gemoli
+	helper = store
+[commit]
+	gpgsign = true
+[difftool]
+	prompt = false
+[difftool "vimdiff"]
+	cmd = vimdiff -R -c 'nmap q :qa!<CR>' -c 'windo setlocal nomodifiable' -c 'nmap ? [c' -c 'nmap ^ ]c' \"$LOCAL\" \"$REMOTE\"
+[difftool "meld"]
+	cmd = meld \"$LOCAL\" \"$REMOTE\"
+[difftool "vscode"]
+	cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
+[init]
+	defaultBranch = main
+    #templateDir = /home/dgemoli/.git-template
+[alias]
+	lg1 = log --graph --all --oneline
+	lg2 = log --graph --oneline
+	co = checkout
+    st = status --untracked-files=all --renames
+	br = branch
+    purge = !git reset --hard && git clean -df -e '.vscode' -e __workbench
+    b = "!git --no-pager branch | tr -d ' ' | tr -d '*' | fzf -e --bind 'enter:become(git checkout {})'"
+	merge-upstream = "!main_branch=master; if $(git rev-parse --verify main &>/dev/null); then main_branch=main; fi; git fetch upstream && git switch $main_branch && git merge refs/heads/$main_branch --ff upstream/$main_branch"
+    dt = difftool
+[core]
+	editor = vim
+    pager = delta
+    excludesFile = /home/dgemoli/dev/config/global_gitignore
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)	
+	side-by-side = false
+    line-numbers = true
+    tabs = 4
+[merge]
+    conflictstyle = zdiff3
+[gc]
+	autoDetach = false
+	pruneExpire = now
+[push]
+    autoSetupRemote = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[http]
+	cookiefile = abc
+#[rh-pre-commit]
+    #enableLocalConfig = false
+    #checkSecrets = true
+#[rh-pre-commit "commit-msg"]
+    #signOff = true
+[tag]
+    sort = version:refname
+

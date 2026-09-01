@@ -5,8 +5,8 @@
 ! Color cheatsheet: https://www.tweaking4all.com/software/linux-software/xterm-color-cheat-sheet/
 
 ! Fonts
-XTerm*vt100.faceName:           xft:Droid Sans Mono:size=10:antialias=true:style=Regular
-XTerm*vt100.boldFont:           xft:Droid Sans Mono:size=10:antialias=true:style=Bold
+XTerm*vt100.faceName:           xft:Droid Sans Mono:size=12:antialias=true:style=Regular
+XTerm*vt100.boldFont:           xft:Droid Sans Mono:size=12:antialias=true:style=Bold
 ! XTerm*vt100.faceName:           xft:DejaVu Sans Mono:size=10:antialias=true:style=Regular
 ! XTerm*vt100.boldFont:           xft:DejaVu Sans Mono:size=10:antialias=true:style=Bold
 
@@ -20,7 +20,9 @@ XTerm*menuLocale: "C"
 ! Theme
 XTerm*dynamicColors: true
 XTerm*termName: xterm-256color
-#include "/home/dgemoli/dev/config/xorg/base16-google-dark-256.Xresources"
+! #include "/home/dgemoli/dev/config/xorg/base16-google-dark-256.Xresources"
+! #include "/home/dgemoli/dev/src/github.com/tinted-theming/tinted-xresources/xresources/base16-nord.Xresources"
+#include "/home/dgemoli/dev/src/github.com/nordtheme/xresources/src/nord"
 
 ! Mouse
 XTerm*pointerShape:             left_ptr
@@ -75,6 +77,4 @@ XTerm*toolBar: false
 
 ! Fix font size
 XTerm.Xft.dpi: 128
-
-! #include "/home/dgemoli/dev/src/github.com/altercation/solarized/xresources/solarized"
 
