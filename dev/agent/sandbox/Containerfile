@@ -1,0 +1,17 @@
+FROM quay.io/fedora/fedora:43
+
+RUN tee -a /etc/yum.repos.d/google-cloud-sdk.repo <<EOM
+[google-cloud-cli]
+name=Google Cloud CLI
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el10-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key-v10.gpg
+EOM
+
+RUN dnf install -y libxcrypt-compat.x86_64 && \
+    CLOUDSDK_SKIP_PY_COMPILATION=1 dnf install -y google-cloud-cli && \
+    curl -fsSL https://claude.ai/install.sh | bash
+
+ENTRYPOINT ["/usr/bin/bash"]
